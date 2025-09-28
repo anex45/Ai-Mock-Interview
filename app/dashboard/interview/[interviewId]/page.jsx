@@ -59,7 +59,7 @@ function Interview({ params }) {
           />
         ) : (
           <>
-            <WebcamIcon className="h-72 w-full my-7 p-20 bg-secondary rounded-lg border" />
+            <WebcamIcon className="h-72 w-full my-7 p-20 bg-secondary rounded-lg border" aria-label="Webcam placeholder" />
             <Button variant="ghost" onClick={() => setWebCamEnabled(true)}>
               Enable Web Cam and Microphone
             </Button>

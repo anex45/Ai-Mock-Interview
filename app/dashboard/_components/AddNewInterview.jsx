@@ -81,10 +81,12 @@ function AddNewInterview() {
         <DialogContent className="bg-gray-900 text-white max-w-2xl border border-gray-800">
           <DialogHeader>
             <DialogTitle className="text-2xl">Tell us more about your job interviewing</DialogTitle>
-            <DialogDescription>
-              <form onSubmit={onSubmit}>
-                <div className="space-y-6">
-                  <h2 className="text-lg">Add Details about your job position/role, Job description, and years of experience</h2>
+            <DialogDescription className="text-gray-400">
+              Add Details about your job position/role, Job description, and years of experience
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={onSubmit}>
+            <div className="space-y-6 mt-4">
 
                   <div className="mt-4">
                     <label className="block text-gray-300 mb-2">Job Role/Job Position</label>
@@ -137,8 +139,6 @@ function AddNewInterview() {
                   </Button>
                 </div>
               </form>
-            </DialogDescription>
-          </DialogHeader>
         </DialogContent>
       </Dialog>
     </div>

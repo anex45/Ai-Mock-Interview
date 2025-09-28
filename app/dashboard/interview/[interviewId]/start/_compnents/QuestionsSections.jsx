@@ -11,7 +11,18 @@ function QuestionsSections({ activeQuestionIndex, mockInterViewQuestion }) {
     }
   };
 
-  return mockInterViewQuestion && (
+  // Safety check: ensure mockInterViewQuestion is an array
+  if (!mockInterViewQuestion || !Array.isArray(mockInterViewQuestion) || mockInterViewQuestion.length === 0) {
+    return (
+      <div className='p-5 border rounded-lg my-10 border-gray-600 bg-gray-800 text-white'>
+        <div className='text-center text-gray-400'>
+          Loading questions...
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div className='p-5 border rounded-lg my-10 border-gray-600 bg-gray-800 text-white'>
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 text-center'>
         {mockInterViewQuestion.map((question, index) => (

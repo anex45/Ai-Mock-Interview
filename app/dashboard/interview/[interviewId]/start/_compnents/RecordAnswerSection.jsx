@@ -16,6 +16,7 @@ function RecordAnswerSection({ activeQuestionIndex, mockInterViewQuestion, inter
   const [userAnswer, setUserAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  
   const {
     error,
     isRecording,
@@ -28,10 +29,11 @@ function RecordAnswerSection({ activeQuestionIndex, mockInterViewQuestion, inter
     useLegacyResults: false,
   });
 
-  if (error) {
-    toast(error);
-    return;
-  }
+  useEffect(() => {
+    if (error) {
+      toast(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     results.forEach((result) => {
@@ -55,6 +57,14 @@ function RecordAnswerSection({ activeQuestionIndex, mockInterViewQuestion, inter
 
   const UpdateUserAnswerInDb = async () => {
     setLoading(true);
+    
+    // Safety check: ensure mockInterViewQuestion is available and is an array
+    if (!mockInterViewQuestion || !Array.isArray(mockInterViewQuestion) || !mockInterViewQuestion[activeQuestionIndex]) {
+      toast('Error: Question data not available');
+      setLoading(false);
+      return;
+    }
+    
     const feedbackPrompt = `Question: ${mockInterViewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}. Based on the question and the user's answer, please provide a rating 1 to 10 for the answer and feedback in the form of areas for improvement, if any. The feedback should be in JSON format only with fields for rating and feedback only, in just 3 to 5 lines.`;
     
     try {
@@ -96,6 +106,7 @@ function RecordAnswerSection({ activeQuestionIndex, mockInterViewQuestion, inter
           src={"/webcam.png"}
           width={200}
           height={200}
+          alt="Webcam frame overlay"
           className="absolute"
         />
         <Webcam

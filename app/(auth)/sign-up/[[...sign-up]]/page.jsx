@@ -7,7 +7,7 @@ export default function Page() {
   <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
     <aside class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
       <img
-        alt=""
+        alt="AI Interview Signup Background"
         src="https://images.unsplash.com/photo-1653406759381-4d6ca279cab3?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         class="absolute inset-0 object-cover"
       />

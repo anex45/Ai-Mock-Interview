@@ -20,10 +20,11 @@ function Header() {
         <header className='flex p-4 items-center justify-between bg-gradient-to-r from-gray-800 to-black shadow-lg max-w-full overflow-hidden'>
             <Image
                 src={'/logo.svg'}
-                width={160}
-                height={100}
-                alt='logo'
+                width={120}
+                height={40}
+                alt='AI Interview Logo'
                 className='hover:opacity-90 transition-opacity cursor-pointer'
+                style={{ height: '40px', width: 'auto' }}
                 onClick={() => getRoutLink('/')}
             />
             <nav>
