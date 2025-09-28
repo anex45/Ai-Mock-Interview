@@ -42,8 +42,9 @@ export default function Page() {
             </h2>
 
             <p class="mt-4 leading-relaxed text-white/90">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
+              Sample Signin 
+              Username:- samplesignin30@gmail.com
+              password:- sample_sign_in30
             </p>
           </div>
         </section>
@@ -74,8 +75,9 @@ export default function Page() {
               </h1>
 
               <p class="mt-4 leading-relaxed text-gray-500 dark:text-gray-400">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Eligendi nam dolorum aliquam, quibusdam aperiam voluptatum.
+              Sample Signin 
+              Username:- samplesignin30@gmail.com
+              password:- sample_sign_in30
               </p>
             </div>
             <div className="h-12">

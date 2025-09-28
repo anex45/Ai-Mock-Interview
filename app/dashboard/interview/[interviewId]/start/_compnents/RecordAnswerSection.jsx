@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import useSpeechToText from "react-hook-speech-to-text";
 import { Mic, StopCircle } from "lucide-react";
 import { toast } from "sonner";
-import { chatSession } from "@/utils/GeminiAIModel";
+import { generateContent } from "@/utils/GeminiAIModel";
 import { db } from "@/utils/db";
 import { UserAnswer } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
@@ -56,31 +56,37 @@ function RecordAnswerSection({ activeQuestionIndex, mockInterViewQuestion, inter
   const UpdateUserAnswerInDb = async () => {
     setLoading(true);
     const feedbackPrompt = `Question: ${mockInterViewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}. Based on the question and the user's answer, please provide a rating 1 to 10 for the answer and feedback in the form of areas for improvement, if any. The feedback should be in JSON format only with fields for rating and feedback only, in just 3 to 5 lines.`;
-    const result = await chatSession.sendMessage(feedbackPrompt);
-    const mockJsonResp = result.response
-      .text()
-      .replace("```json", "")
-      .replace("```", "");
+    
+    try {
+      const result = await generateContent(feedbackPrompt);
+      const mockJsonResp = result.text
+        .replace("```json", "")
+        .replace("```", "");
 
-    const JsonFeedbackResp = JSON.parse(mockJsonResp);
-    const resp = await db.insert(UserAnswer).values({
-      mockIdRef: interviewData?.mockId,
-      question: mockInterViewQuestion[activeQuestionIndex]?.question,
-      correctAns: mockInterViewQuestion[activeQuestionIndex]?.answer,
-      userAns: userAnswer,
-      feedback: JsonFeedbackResp?.feedback,
-      rating: JsonFeedbackResp?.rating,
-      userEmail: user?.primaryEmailAddress?.emailAddress,
-      createdAt: moment().format('DD-MM-yyyy')
-    });
+      const JsonFeedbackResp = JSON.parse(mockJsonResp);
+      const resp = await db.insert(UserAnswer).values({
+        mockIdRef: interviewData?.mockId,
+        question: mockInterViewQuestion[activeQuestionIndex]?.question,
+        correctAns: mockInterViewQuestion[activeQuestionIndex]?.answer,
+        userAns: userAnswer,
+        feedback: JsonFeedbackResp?.feedback,
+        rating: JsonFeedbackResp?.rating,
+        userEmail: user?.primaryEmailAddress?.emailAddress,
+        createdAt: moment().format('DD-MM-yyyy')
+      });
 
-    if (resp) {
-      toast('User answer recorded successfully!');
-      setUserAnswer('');
+      if (resp) {
+        toast('User answer recorded successfully!');
+        setUserAnswer('');
+        setResults([]);
+      }
+    } catch (error) {
+      console.error('Error updating user answer:', error);
+      toast('Error recording answer. Please try again.');
+    } finally {
       setResults([]);
+      setLoading(false);
     }
-    setResults([]);
-    setLoading(false);
   };
 
   return (

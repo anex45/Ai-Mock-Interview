@@ -14,7 +14,7 @@ The **AI Mock Interview Platform** is a web application designed to help users p
 
 - **Frontend:** React, Next.js, Tailwind CSS, Clerk for authentication
 - **Backend:** Custom API for managing interview data and feedback
-- **Database:** Custom database setup with schema for user answers and feedback
+- **Database:** DRIZZLE ORM database setup with schema for user answers and feedback
 - **Speech Recognition:** `react-hook-speech-to-text` for speech-to-text functionality
 
 ## Setup Instructions

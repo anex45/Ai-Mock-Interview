@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { chatSession } from "@/utils/GeminiAIModel";
+import { generateContent } from "@/utils/GeminiAIModel";
 import { LoaderCircle } from "lucide-react";
 import { db } from "@/utils/db";
 import { MockInterview } from "@/utils/schema";
@@ -33,36 +33,40 @@ function AddNewInterview() {
     setLoading(true);
     e.preventDefault();
 
-    const InputPromt = `Generate ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION} interview questions and answers in JSON format based on the following: Job Position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Only return the JSON, without any additional text.`;
-    const result = await chatSession.sendMessage(InputPromt);
-    const MockJsonResp = result.response
-      .text()
-      .replace("```json", "")
-      .replace("```", "");
+    try {
+      const InputPromt = `Generate ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION} interview questions and answers in JSON format based on the following: Job Position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Only return the JSON, without any additional text.`;
+      const result = await generateContent(InputPromt);
+      const MockJsonResp = result.text
+        .replace("```json", "")
+        .replace("```", "");
 
-    setJsonResponse(JSON.parse(MockJsonResp));
-    
-    if (MockJsonResp) {
-      const resp = await db.insert(MockInterview).values({
-        mockId: uuidv4(),
-        jsonMockResp: MockJsonResp,
-        jobPosition: jobPosition,
-        jobDesc: jobDesc,
-        jobExperience: jobExperience,
-        createdBy: user?.primaryEmailAddress?.emailAddress,
-        createdAt: moment().format("DD-MM-yyyy"),
-      }).returning({ mockId: MockInterview.mockId });
-      console.log("Insert ID:", resp);
-      if (resp) {
-        route.push('/dashboard/interview/' + resp[0].mockId);
-        setOpenDialog(false);
+      setJsonResponse(JSON.parse(MockJsonResp));
+      
+      if (MockJsonResp) {
+        const resp = await db.insert(MockInterview).values({
+          mockId: uuidv4(),
+          jsonMockResp: MockJsonResp,
+          jobPosition: jobPosition,
+          jobDesc: jobDesc,
+          jobExperience: jobExperience,
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format("DD-MM-yyyy"),
+        }).returning({ mockId: MockInterview.mockId });
+        console.log("Insert ID:", resp);
+        if (resp) {
+          route.push('/dashboard/interview/' + resp[0].mockId);
+          setOpenDialog(false);
+        }
+      } else {
+        console.log("ERROR");
       }
-    } else {
-      console.log("ERROR");
+    } catch (error) {
+      console.error("Error creating interview:", error);
+      // Handle error appropriately
+    } finally {
+      setLoading(false);
+      console.log(JsonResponse);
     }
-
-    setLoading(false);
-    console.log(JsonResponse);
   };
 
   return (
